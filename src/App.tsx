@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./auth/AuthContext.tsx";
-import { RequireAuth } from "./auth/RequireAuth.tsx";
-
-// Pantallas temporales (Luego las crearás o las harán tus compañeros)
-const Login = () => <div className="p-8 text-2xl font-bold">Pantalla de Login</div>;
-const Dashboard = () => <div className="p-8 text-2xl font-bold">Pantalla de Dashboard</div>;
+import { AuthProvider } from "./auth/AuthContext";
+import { RequireAuth } from "./auth/RequireAuth";
+import Login from "./routes/Login";
+import Register from "./routes/Register";
+import Dashboard from "./routes/Dashboard";
+import NotFound from "./routes/NotFound";
 
 function App() {
   return (
@@ -12,14 +12,15 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           
-          {/* Rutas Protegidas (Solo si hay sesión) */}
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            
-            {/* Aquí B y C agregarán /wanted, /news, /sagas */}
+            {/* METAN SUS RUTAS ACA */}
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
