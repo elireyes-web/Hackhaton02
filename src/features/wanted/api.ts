@@ -1,7 +1,6 @@
-// Asume que su cliente del CP1 exporta:
-//   apiFetch<T>(path: string, options?: { signal?: AbortSignal }): Promise<T>
-// que agrega VITE_API_BASE_URL + el Bearer token y lanza un Error si la respuesta no es 2xx.
-import { apiFetch } from '../../api/client'
+// Usa el cliente del CP1 (src/lib/api.ts): agrega VITE_API_BASE_URL + el Bearer token,
+// acepta { signal } para cancelar y lanza ApiError si la respuesta no es 2xx.
+import { apiFetch } from '../../lib/api'
 import type { Crew, WantedPage, WantedPoster } from './types'
 
 export function fetchWanted(queryString: string, signal: AbortSignal): Promise<WantedPage> {

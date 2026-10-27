@@ -5,6 +5,8 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Dashboard from "./routes/Dashboard";
 import NotFound from "./routes/NotFound";
+import WantedPage from "./pages/WantedPage";
+import WantedDetailPage from "./pages/WantedDetailPage";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/wanted" element={<WantedPage />} />
+            <Route path="/wanted/:id" element={<WantedDetailPage />} />
             {/* METAN SUS RUTAS ACA */}
           </Route>
 

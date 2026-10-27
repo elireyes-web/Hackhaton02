@@ -2,26 +2,27 @@ import { STATUS_OPTIONS } from './constants'
 import type { WantedPoster } from './types'
 
 const bountyFormatter = new Intl.NumberFormat('es-PE')
+const dateFormatter = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeStyle: 'short' })
 
-export function formatBounty(value: unknown): string {
-  return typeof value === 'number' ? `฿ ${bountyFormatter.format(value)}` : 'Sin recompensa'
+export function formatBounty(value: number): string {
+  return `฿ ${bountyFormatter.format(value)}`
 }
 
-export function statusLabel(value: string | null | undefined): string {
-  if (!value) return 'Sin estado'
+export function statusLabel(value: string): string {
   return STATUS_OPTIONS.find((o) => o.value === value)?.label ?? value
 }
 
 export function crewNameOf(poster: WantedPoster): string | null {
-  if (typeof poster.crewName === 'string') return poster.crewName
-  const crew = poster.crew
-  if (typeof crew === 'object' && crew !== null && 'name' in crew && typeof crew.name === 'string') {
-    return crew.name
-  }
-  return null
+  return poster.crew?.name ?? null
 }
 
-export function humanizeKey(key: string): string {
-  const spaced = key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').trim()
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1)
+/** "FIRST_MATE" -> "First mate" */
+export function humanize(value: string): string {
+  const text = value.replace(/_/g, ' ').toLowerCase()
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+export function formatDate(iso: string): string {
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? iso : dateFormatter.format(date)
 }

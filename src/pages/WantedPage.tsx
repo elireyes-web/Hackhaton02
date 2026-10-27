@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { FRUIT_OPTIONS, PAGE_SIZES, SORT_OPTIONS, STATUS_OPTIONS, type Option } from '../features/wanted/constants'
 import { crewNameOf, formatBounty, statusLabel } from '../features/wanted/format'
@@ -13,7 +13,7 @@ const selectClass =
 const actionClass =
   'h-9 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-700'
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
       {label}

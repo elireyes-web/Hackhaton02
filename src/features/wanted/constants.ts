@@ -15,15 +15,20 @@ export interface Option {
   label: string
 }
 
-// TODO: REEMPLAZAR con los valores reales del enum que aparecen en Swagger (GET /wanted).
+// Valores reales de GET /wanted (status y devilFruit.type).
 // Si un valor de la URL no está en esta lista, se ignora (así una URL inválida no rompe la vista).
+export const WANTED_STATUSES = ['AT_LARGE', 'CAPTURED', 'MISSING'] as const
+export type WantedStatus = (typeof WANTED_STATUSES)[number]
+
 export const STATUS_OPTIONS: readonly Option[] = [
-  { value: 'ACTIVE', label: 'Activo' },
+  { value: 'AT_LARGE', label: 'Prófugo' },
   { value: 'CAPTURED', label: 'Capturado' },
-  { value: 'DECEASED', label: 'Fallecido' },
+  { value: 'MISSING', label: 'Desaparecido' },
 ]
 
-// TODO: REEMPLAZAR con los valores reales del enum de fruta del diablo de Swagger.
+export const FRUIT_TYPES = ['PARAMECIA', 'ZOAN', 'LOGIA'] as const
+export type FruitType = (typeof FRUIT_TYPES)[number]
+
 export const FRUIT_OPTIONS: readonly Option[] = [
   { value: 'PARAMECIA', label: 'Paramecia' },
   { value: 'ZOAN', label: 'Zoan' },

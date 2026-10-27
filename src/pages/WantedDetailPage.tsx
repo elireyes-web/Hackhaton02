@@ -1,16 +1,9 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { crewNameOf, formatBounty, humanizeKey, statusLabel } from '../features/wanted/format'
+import { crewNameOf, formatBounty, formatDate, humanize, statusLabel } from '../features/wanted/format'
 import { useWantedDetail } from '../features/wanted/hooks'
 
 const actionClass =
   'h-9 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-700'
-
-function displayValue(key: string, value: string | number | boolean): string {
-  if (key === 'bounty' && typeof value === 'number') return formatBounty(value)
-  if (key === 'status' && typeof value === 'string') return statusLabel(value)
-  if (typeof value === 'boolean') return value ? 'Sí' : 'No'
-  return String(value)
-}
 
 export default function WantedDetailPage() {
   const { id = '' } = useParams()
@@ -25,13 +18,20 @@ export default function WantedDetailPage() {
     else navigate('/wanted')
   }
 
-  const facts =
+  const facts: { label: string; value: string }[] =
     data === null
       ? []
-      : Object.entries(data).filter(
-          (entry): entry is [string, string | number | boolean] =>
-            ['string', 'number', 'boolean'].includes(typeof entry[1]) && entry[1] !== '' && entry[0] !== 'id',
-        )
+      : [
+          { label: 'Tripulación', value: crewNameOf(data) ?? 'Sin tripulación' },
+          { label: 'Rol', value: humanize(data.role) },
+          {
+            label: 'Fruta del diablo',
+            value: data.devilFruit ? `${data.devilFruit.name} (${humanize(data.devilFruit.type)})` : 'Ninguna',
+          },
+          { label: 'Nivel de amenaza', value: `${data.threatLevel} / 5` },
+          { label: 'Última vez visto en', value: data.lastSeenIsland },
+          { label: 'Actualizado', value: formatDate(data.updatedAt) },
+        ]
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-4 p-4">
@@ -66,25 +66,20 @@ export default function WantedDetailPage() {
 
       {!loading && data !== null && (
         <article className="rounded-md border border-slate-200 bg-white p-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-800">Se busca</p>
           <h1 className="text-2xl font-bold text-slate-900">{data.name}</h1>
-          {data.epithet && <p className="text-slate-600">{data.epithet}</p>}
+          <p className="text-slate-600">"{data.epithet}"</p>
           <p className="mt-3 text-3xl font-bold text-amber-800">{formatBounty(data.bounty)}</p>
-          <p className="text-sm text-slate-600">
-            {[statusLabel(data.status), crewNameOf(data)].filter(Boolean).join(' · ')}
-          </p>
+          <p className="text-sm text-slate-600">{statusLabel(data.status)}</p>
 
-          {facts.length > 0 && (
-            <dl className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-              {facts
-                .filter(([key]) => !['name', 'epithet', 'bounty', 'status', 'crewName'].includes(key))
-                .map(([key, value]) => (
-                  <div key={key}>
-                    <dt className="text-sm text-slate-600">{humanizeKey(key)}</dt>
-                    <dd className="font-medium text-slate-900">{displayValue(key, value)}</dd>
-                  </div>
-                ))}
-            </dl>
-          )}
+          <dl className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+            {facts.map((fact) => (
+              <div key={fact.label}>
+                <dt className="text-sm text-slate-600">{fact.label}</dt>
+                <dd className="font-medium text-slate-900">{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
         </article>
       )}
     </main>
