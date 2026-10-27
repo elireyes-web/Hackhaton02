@@ -3,12 +3,10 @@ import { Link } from "react-router-dom";
 import { apiFetch, ApiError } from "../lib/api";
 import { useAuth } from "../auth/AuthContext";
 
-// Tipos basados en lo que devuelve tu API
 interface DashboardData {
   team: { code: string; name: string };
   wanted: { total: number; totalBounty: number };
   crews: { total: number };
-  // ... puedes agregar más si los necesitas
 }
 
 interface LogPoseData {
@@ -69,7 +67,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        
+        {/* Header con título y botones */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-4xl font-bold text-yellow-400">Dashboard</h1>
             {data && (
@@ -78,9 +78,13 @@ export default function Dashboard() {
               </p>
             )}
           </div>
+          
           <div className="flex flex-wrap gap-3">
-            <Link to="/wanted" className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-4 py-2 rounded font-bold transition-colors">
-              Carteles de "Se Busca"
+            <Link to="/wanted" className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded font-bold transition-colors">
+              Carteles
+            </Link>
+            <Link to="/news" className="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded font-bold text-black transition-colors">
+              News Coo
             </Link>
             <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded font-bold transition-colors">
               Cerrar Sesión
