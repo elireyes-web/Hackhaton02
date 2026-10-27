@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { errorMessage } from "../lib/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,9 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard";
+  // Volver EXACTAMENTE a donde quería ir: ruta + query (?status=CAPTURED&page=2).
+  const fromState = (location.state as { from?: { pathname: string; search?: string } } | null)?.from;
+  const from = fromState ? `${fromState.pathname}${fromState.search ?? ""}` : "/dashboard";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,8 +23,8 @@ export default function Login() {
     try {
       await login(email, password);
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setError(err.message || "Error al iniciar sesión");
+    } catch (err: unknown) {
+      setError(errorMessage(err, "Error al iniciar sesión"));
     } finally {
       setIsLoading(false);
     }

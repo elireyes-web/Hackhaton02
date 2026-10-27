@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { apiFetch } from '../lib/api'; 
+import { apiFetch, errorMessage } from '../lib/api' 
 import type { NewsItem } from '../features/news/useNewsFeed';
 
 export default function NewsDetail() {
@@ -20,7 +20,7 @@ export default function NewsDetail() {
   useEffect(() => {
     apiFetch<NewsItem>(`/news/${id}`)
       .then(setNews)
-      .catch((err) => setError(err.message))
+      .catch((err: unknown) => setError(errorMessage(err, 'Error al cargar la noticia')))
       .finally(() => setIsLoading(false));
   }, [id]);
 
@@ -35,8 +35,8 @@ export default function NewsDetail() {
       });
       setNews(updated);
       setSuccessMsg(`Noticia marcada como ${newStatus}`);
-    } catch (err: any) {
-      setUpdateError(err.message || 'Error al verificar la noticia. Reintenta.');
+    } catch (err: unknown) {
+      setUpdateError(errorMessage(err, 'Error al verificar la noticia. Reintenta.'));
     } finally {
       setIsUpdating(false);
     }

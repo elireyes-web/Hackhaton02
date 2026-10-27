@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { apiFetch } from '../../lib/api'; 
+import { apiFetch, isAbortError, errorMessage } from '../../lib/api'; 
 
 export interface NewsItem {
   id: string;
@@ -69,9 +69,9 @@ export function useNewsFeed() {
 
       cursorRef.current = data.nextCursor;
       setHasMore(data.hasMore);
-    } catch (err: any) {
-      if (err.name !== 'AbortError') {
-        setError(err.message || 'Error al cargar noticias');
+    } catch (err: unknown) {
+      if (!isAbortError(err)) {
+        setError(errorMessage(err, 'Error al cargar noticias'));
       }
     } finally {
       isFetchingRef.current = false;

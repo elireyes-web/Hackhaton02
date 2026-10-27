@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiFetch, ApiError } from "../lib/api";
+import { apiFetch, ApiError, errorMessage } from "../lib/api";
 import { useAuth } from "../auth/AuthContext";
 
 interface DashboardData {
@@ -32,11 +32,11 @@ export default function Dashboard() {
       ]);
       setData(summaryData);
       setLogPose(logPoseData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof ApiError && err.status === 401) {
         logout();
       } else {
-        setError(err.message || "Error al cargar el dashboard");
+        setError(errorMessage(err, "Error al cargar el dashboard"));
       }
     } finally {
       setIsLoading(false);

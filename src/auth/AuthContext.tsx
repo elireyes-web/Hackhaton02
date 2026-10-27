@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { ReactNode } from "react";import { apiFetch } from "../lib/api"   ;
+import type { ReactNode } from "react";
+import { apiFetch, UNAUTHORIZED_EVENT } from "../lib/api";
 
+// Forma real de GET /auth/me y POST /auth/login: { user: { id, name, email }, team: { code, name } }
 interface User {
   id: string;
+  name: string;
   email: string;
-  teamCode: string;
 }
 
 interface AuthContextType {
@@ -23,6 +25,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
+  // Si cualquier request protegida responde 401, la sesión dejó de ser válida: volver al login.
+  useEffect(() => {
+    const onUnauthorized = () => {
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+  }, []);
+
   useEffect(() => {
     async function checkSession() {
       if (!token) {
@@ -32,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const data = await apiFetch<{ user: User }>("/auth/me");
         setUser(data.user);
-      } catch (error) {
+      } catch {
         localStorage.removeItem("token");
         setToken(null);
         setUser(null);
