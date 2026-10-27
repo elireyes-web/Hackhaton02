@@ -82,6 +82,12 @@ export default function Dashboard() {
             <Link to="/wanted" className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-4 py-2 rounded font-bold transition-colors">
               Carteles de "Se Busca"
             </Link>
+            <Link to="/news" className="bg-sky-600 hover:bg-sky-500 px-4 py-2 rounded font-bold transition-colors">
+              News Coo
+            </Link>
+            <Link to="/sagas" className="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded font-bold transition-colors">
+              Poneglyph
+            </Link>
             <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded font-bold transition-colors">
               Cerrar Sesión
             </button>

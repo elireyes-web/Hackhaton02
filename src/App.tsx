@@ -9,6 +9,8 @@ import Dashboard from "./routes/Dashboard";
 import NotFound from "./routes/NotFound";
 import WantedPage from "./pages/WantedPage";
 import WantedDetailPage from "./pages/WantedDetailPage";
+import SagasPage from "./pages/SagasPage";
+import SagaStoryPage from "./pages/SagaStoryPage";
 
 function App() {
   return (
@@ -27,7 +29,8 @@ function App() {
             <Route path="/news" element={<NewsFeed />} />
             <Route path="/news/:id" element={<NewsDetail />} />
             
-            {/* METAN SUS RUTAS ACA (Sagas, etc) */}
+            <Route path="/sagas" element={<SagasPage />} />
+            <Route path="/sagas/:id" element={<SagaStoryPage />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

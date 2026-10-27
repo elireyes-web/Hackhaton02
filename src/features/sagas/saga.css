@@ -1,0 +1,111 @@
+/* =========================================================================
+   CP5 · Poneglyph — CSS propio (sin GSAP, Motion, Scrollama, AOS ni Lenis)
+   1) Variables registradas con @property: se pueden transicionar entre etapas.
+   2) CSS Scroll-driven Animations dentro de @supports + fallback con JS.
+   3) prefers-reduced-motion: sin animaciones, la historia se entiende igual.
+   ========================================================================= */
+
+@property --saga-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f59e0b;
+}
+@property --saga-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0f172a;
+}
+@property --saga-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1e293b;
+}
+@property --saga-highlight {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #38bdf8;
+}
+
+/* Elemento compartido entre el resumen y la historia (View Transition API). */
+.saga-vt {
+  view-transition-name: var(--vt-name);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+
+/* Contenedor de la historia: define la línea de tiempo del scroll. */
+.saga-track {
+  view-timeline-name: --saga;
+  view-timeline-axis: block;
+  background: var(--saga-bg);
+  transition: --saga-bg 0.6s ease, --saga-surface 0.6s ease, --saga-accent 0.6s ease, --saga-highlight 0.6s ease, color 0.6s ease;
+}
+
+/* Barra de progreso: el fallback es scaleX(var(--progress)) puesto desde React. */
+.saga-progress-bar {
+  height: 100%;
+  background: var(--saga-accent);
+  transform-origin: left center;
+  transform: scaleX(var(--progress, 0));
+}
+
+/* Tarjeta de cada etapa: nunca se oculta, solo se realza la activa. */
+.saga-stage {
+  opacity: 0.6;
+  border-left: 4px solid transparent;
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+}
+.saga-stage[aria-current='step'] {
+  opacity: 1;
+  border-left-color: var(--saga-accent);
+}
+
+/* Mapa: el barco se desliza a la isla activa y la ruta se dibuja. */
+.saga-ship {
+  transition: transform 0.7s ease;
+}
+.saga-route {
+  transition: stroke-dashoffset 0.7s ease;
+}
+
+/* ---------- Movimiento SOLO si el usuario no pidió reduced motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .saga-progress-bar {
+      animation: saga-progress linear both;
+      animation-timeline: --saga;
+      animation-range: contain 0% contain 100%;
+    }
+    .saga-stage {
+      animation: saga-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saga-track,
+  .saga-stage,
+  .saga-ship,
+  .saga-route {
+    transition: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@keyframes saga-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+/* Solo se anima "translate": la opacidad la controla la etapa activa. */
+@keyframes saga-reveal {
+  from { translate: 0 32px; }
+  to { translate: 0 0; }
+}
