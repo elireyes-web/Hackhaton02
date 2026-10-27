@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { apiFetch, ApiError } from "../lib/api";
 import { useAuth } from "../auth/AuthContext";
 
@@ -77,9 +78,14 @@ export default function Dashboard() {
               </p>
             )}
           </div>
-          <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded font-bold transition-colors">
-            Cerrar Sesión
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/wanted" className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-4 py-2 rounded font-bold transition-colors">
+              Carteles de "Se Busca"
+            </Link>
+            <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded font-bold transition-colors">
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
 
         {/* Tarjetas de métricas */}

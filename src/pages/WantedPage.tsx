@@ -93,9 +93,14 @@ export default function WantedPage() {
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-4 p-4">
-      <header>
-        <h1 className="text-2xl font-bold text-slate-900">Carteles de "Se Busca"</h1>
-        <p className="text-sm text-slate-600">Filtra, ordena y abre el cartel de cualquier pirata.</p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Carteles de "Se Busca"</h1>
+          <p className="text-sm text-slate-600">Filtra, ordena y abre el cartel de cualquier pirata.</p>
+        </div>
+        <Link to="/dashboard" className={`${actionClass} inline-flex items-center`}>
+          ← Volver al dashboard
+        </Link>
       </header>
 
       <section aria-label="Filtros" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
